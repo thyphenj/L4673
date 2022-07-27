@@ -163,74 +163,184 @@ namespace L4673
                 if (poss_d.Count == 1)
                     d = poss_d[0];
 
+                // -- Shall we try F
+                List<int> poss_F = new List<int>();
 
+                foreach (var F_ in Factorize(H, 2))
+                {
+                    poss_F.Add(F_);
+                }
+                int F = 0;
+                if (poss_F.Count == 1)
+                    F = poss_F[0];
 
+                // -- Try for  & O
+                List<int> poss_B = new List<int>();
+                List<int> poss_O = new List<int>();
+
+                foreach (int B_ in Factorize(T - F - F - F, 2))
+                {
+                    int O_ = B_ + B_ + f;
+                    if (IsValid(O_) && O_.ToString().Length == 2)
+                    {
+                        poss_B.Add(B_);
+                        poss_O.Add(O_);
+                    }
+                }
+                int B = 0;
+                int O = 0;
+                if (poss_B.Count == 1)
+                {
+                    B = poss_B[0];
+                    O = poss_O[0];
+                }
+
+                // -- We can just calc R & Z
+
+                int R = c - B - b;
+                int Z = O * d;
+
+                // -- Let's try for e, Q, D
+                List<int> poss_e = new List<int>();
+                List<int> poss_Q = new List<int>();
+                List<int> poss_D = new List<int>();
+                List<int> poss_G = new List<int>();
+                List<int> poss_S = new List<int>();
+
+                for (int ind = 1; V + ind * ind < 100; ind++)
+                {
+                    int e_ = V + ind * ind;
+                    int Q_ = B + e_ - F;
+                    int D_ = M + Q_ - B;
+                    int G_ = D_ + T - f;
+                    int S_ = G_ * (B + F);
+                    if (IsValid(e_) && IsValid(Q_) && IsValid(D_) && IsValid(G_) && IsValid(S_))
+                    {
+                        poss_e.Add(e_);
+                        poss_Q.Add(Q_);
+                        poss_D.Add(D_);
+                        poss_G.Add(G_);
+                        poss_S.Add(S_);
+                    }
+                }
+
+                int e = 0, Q = 0, D = 0, G = 0, S = 0;
+                if (poss_e.Count == 1)
+                {
+                    e = poss_e[0];
+                    Q = poss_Q[0];
+                    D = poss_D[0];
+                    G = poss_G[0];
+                    S = poss_S[0];
+                }
+                int X = T * (Q - V);
+                int J = d - e;
+                int I = F + J + d;
+
+                // -- Let's try for N & P
+                List<int> poss_N = new List<int>();
+                List<int> poss_P = new List<int>();
+
+                for ( int ind = 4; Q * ind * ind < 10000; ind++)
+                {
+                    int N_ = Q * ind * ind;
+                    int P_ = N_ + V;
+                    if ( N_.ToString().Length == 4 && IsValid(N_) && IsValid(P_) && P_.ToString().Length == 4)
+                    {
+                        poss_N.Add(N_);
+                        poss_P.Add(P_);
+                        Console.WriteLine($"N={N_} P={P_}");
+                    }
+                }
+
+                // -- can't think of a sensible way to do A, so
+                List<int> poss_A = new List<int>();
+
+                for ( int A_  = 1000; A_ < 10000; A_++)
+                {
+                    if ( IsValid(A_) && A_% F == 0 && A_ % e == 0)
+                    {
+                        poss_A.Add(A_);
+                        Console.WriteLine(A_);
+                    }
+                }
 
                 Console.WriteLine("------");
-                Console.WriteLine($"C={C,5}");
-                Console.WriteLine($"E={E,5}");
-                Console.WriteLine($"H={H,5}");
-                Console.WriteLine($"K={K,5}");
-                Console.WriteLine($"L={L,5}");
-                Console.WriteLine($"M={M,5}");
-                Console.WriteLine($"T={T,5}");
-                Console.WriteLine($"U={U,5}");
-                Console.WriteLine($"V={V,5}");
-                Console.WriteLine($"W={W,5}");
-                Console.WriteLine($"Y={Y,5}");
-                Console.WriteLine($"a={a,5}");
-                Console.WriteLine($"b={b,5}");
-                Console.WriteLine($"c={c,5}");
-                Console.WriteLine($"d={d,5}");
-                Console.WriteLine($"f={f,5}");
+                Console.WriteLine($"A       B {B,5}");
+                Console.WriteLine($"C {C,5} D {D,5}");
+                Console.WriteLine($"E {E,5} F {F,5}");
+                Console.WriteLine($"G {G,5} H {H,5}");
+                Console.WriteLine($"I {I,5} J {J,5}");
+                Console.WriteLine($"K {K,5} L {L,5}");
+                Console.WriteLine($"M {M,5} N       ");
+                Console.WriteLine($"O {O,5} P       ");
+
+                Console.WriteLine();
+
+                Console.WriteLine($"Q {Q,5}");
+                Console.WriteLine($"R {R,5}");
+                Console.WriteLine($"S {S,5}");
+                Console.WriteLine($"T {T,5}");
+                Console.WriteLine($"U {U,5}");
+                Console.WriteLine($"V {V,5}");
+                Console.WriteLine($"W {W,5}");
+                Console.WriteLine($"X {X,5}");
+                Console.WriteLine($"Y {Y,5}");
+                Console.WriteLine($"Z {Z,5}");
+                Console.WriteLine($"a {a,5}");
+                Console.WriteLine($"b {b,5}");
+                Console.WriteLine($"c {c,5}");
+                Console.WriteLine($"d {d,5}");
+                Console.WriteLine($"e {e,5}");
+                Console.WriteLine($"f {f,5}");
                 Console.WriteLine("------");
 
 
 
 
                 //// -------------------------------------------------------------
-                Console.WriteLine();
-                Console.WriteLine("----------- These are speculative");
-                //int B = 21;
-                for (int B_ = 10; B_ < 100; B_++)
-                {
-                    int R = c - B_ - b;
-                    if (IsValid(R) && R.ToString().Length == 3)
-                        Console.WriteLine($"b={b} R={R} B={B_}");
-                }
+                //Console.WriteLine();
+                //Console.WriteLine("----------- These are speculative");
+                ////int B = 21;
+                //for (int B_ = 10; B_ < 100; B_++)
+                //{
+                //    int R = c - B_ - b;
+                //    if (IsValid(R) && R.ToString().Length == 3)
+                //        Console.WriteLine($"b={b} R={R} B={B_}");
+                //}
             }
 
 
             {
-                Console.WriteLine("-----------");
-                int V = 18;
-                int n = 2;
-                int e = V + n * n;
-                while (e < 100)
-                {
-                    if (IsValid(e) && e != 34)
-                    {
-                        int Q = 21 + e - 41;
-                        if (Q > 9 && IsValid(Q) && Q != 34)
-                        {
-                            int D = 612 + Q - 21;
-                            if (IsValid(D))
-                            {
-                                int p = 2;
-                                int N = Q * p * p;
-                                while (N < 10000)
-                                {
-                                    if (N > 1000 && IsValid(N))
-                                        Console.WriteLine($"e={e} Q={Q} D={D} N={N}");
-                                    p++;
-                                    N = Q * p * p;
-                                }
-                            }
-                        }
-                    }
-                    n++;
-                    e = V + n * n;
-                }
+                //Console.WriteLine("-----------");
+                //int V = 18;
+                //int n = 2;
+                //int e = V + n * n;
+                //while (e < 100)
+                //{
+                //    if (IsValid(e) && e != 34)
+                //    {
+                //        int Q = 21 + e - 41;
+                //        if (Q > 9 && IsValid(Q) && Q != 34)
+                //        {
+                //            int D = 612 + Q - 21;
+                //            if (IsValid(D))
+                //            {
+                //                int p = 2;
+                //                int N = Q * p * p;
+                //                while (N < 10000)
+                //                {
+                //                    if (N > 1000 && IsValid(N))
+                //                        Console.WriteLine($"e={e} Q={Q} D={D} N={N}");
+                //                    p++;
+                //                    N = Q * p * p;
+                //                }
+                //            }
+                //        }
+                //    }
+                //    n++;
+                //    e = V + n * n;
+                //}
             }
 
 
