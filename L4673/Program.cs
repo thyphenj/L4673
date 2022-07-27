@@ -7,85 +7,59 @@ namespace L4673
     {
         static void Main(string[] args)
         {
-            int[] prime = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53 };
-
-            List<int> poss_A = new List<int>();
-            List<int> poss_B = new List<int>();
-            List<int> poss_D = new List<int>();
-            List<int> poss_E = new List<int>();
-            List<int> poss_F = new List<int>();
-            List<int> poss_G = new List<int>();
-            List<int> poss_H = new List<int> { 4181, 6765 };    //-- These are the only valid 4 digit fibonacci numbers
-            List<int> poss_L = new List<int>();
-            List<int> poss_M = new List<int>();
-            List<int> poss_O = new List<int>();
-
-            List<int> poss_Q = new List<int>();
-            List<int> poss_S = new List<int>();
-            List<int> poss_T = new List<int>();
-            List<int> poss_U = new List<int>();
-            List<int> poss_V = new List<int>();
-            List<int> poss_W = new List<int>();
-            List<int> poss_Y = new List<int>();
-            List<int> poss_b = new List<int>();
-            List<int> poss_c = new List<int>();
-            List<int> poss_f = new List<int>();
-            List<int> poss_d = new List<int>();
-            List<int> poss_e = new List<int>();
-
-            //int A = 0, B = 0, C = 0, D = 0, E = 0, F = 0;
-            //int G = 0, H = 0, I = 0, J = 0, K = 0, L = 0;
-            //int M = 0, N = 0, O = 0, P = 0, Q = 0, R = 0;
-            //int S = 0, T = 0, U = 0, V = 0, W = 0, X = 0;
-            //int Z = 0, a = 0, b = 0,  d = 0;
-            //int e = 0, f = 0;
-
-            // -- Have a look at b, c & Y
+            // -- Have a look at c & Y - and create valid possibilities for b
             // -- c has to be a three digit cube
 
-            foreach (int c_ in new int[] { 125, 216, 343, 729 })
-            {
-                poss_b.Add(c_);
+            List<int> poss_b = new List<int>();
 
-                int Y_ = c_ + c_;
-                if (Y_ >= 1000 && IsValid(Y_))
+            int c = 0;
+            int Y = 0;
+            foreach (int c_guess in new int[] { 125, 216, 343, 729 })
+            {
+                poss_b.Add(c_guess);
+
+                int Y_guess = c_guess + c_guess;
+                if (Y_guess >= 1000 && IsValid(Y_guess))
                 {
-                    poss_c.Add(c_);
-                    poss_Y.Add(Y_);
+                    c = c_guess;
+                    Y = Y_guess;
                 }
             }
-            int c = poss_c[0];
-            int Y = poss_Y[0];
             poss_b.Remove(c);
 
             // -- Try for T, U, V and W
 
-            int h_value = 0;
-            foreach (int H_ in poss_H)
-                foreach (int T_ in Factorize(H_, 3))
-                    foreach (int V_ in Factorize(Y, 2))
-                        foreach (int prm in prime)
+            int H = 0;
+            int T = 0;
+            int U = 0;
+            int V = 0;
+            int W = 0;
+            foreach (int V_guess in Factorize(Y, 2))
+            {
+                foreach (int prm in new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53 })
+                {
+                    int U_guess = V_guess * prm;
+                    if (U_guess >= 100 && U_guess < 1000)
+                    {
+                        foreach (int H_guess in new int[] { 4181, 6765 })//-- These are the only valid 4 digit fibonacci numbers
                         {
-                            int U_ = V_ * prm;
-                            if (U_ >= 100 && U_ < 1000)
+                            foreach (int T_guess in Factorize(H_guess, 3))
                             {
-                                int W_ = (U_ - T_) * (U_ - T_);
-                                if (W_ >= 1000 && W_ < 10000 && IsValid(W_))
+                                int W_guess = (U_guess - T_guess) * (U_guess - T_guess);
+                                if (W_guess >= 1000 && W_guess < 10000 && IsValid(W_guess))
                                 {
-                                    h_value = H_;
-                                    poss_T.Add(T_);
-                                    poss_U.Add(U_);
-                                    poss_V.Add(V_);
-                                    poss_W.Add(W_);
+                                    H = H_guess;
+                                    T = T_guess;
+                                    U = U_guess;
+                                    V = V_guess;
+                                    W = W_guess;
 
                                 }
                             }
                         }
-            int H = h_value;
-            int T = poss_T[0];
-            int U = poss_U[0];
-            int V = poss_V[0];
-            int W = poss_W[0];
+                    }
+                }
+            }
 
             // -- we can also just calc C now
 
@@ -93,39 +67,41 @@ namespace L4673
 
             // -- Have a quick look at E
 
+            int E = 0;
             for (int ind = 10; T * ind * ind < 100000; ind++)
             {
-                int E_ = T * ind * ind;
-                if (E_ >= 10000 && IsValid(E_))
-                    poss_E.Add(E_);
+                int E_guess = T * ind * ind;
+                if (E_guess >= 10000 && IsValid(E_guess))
+                    E = E_guess;
             }
-            int E = poss_E[0];
 
             // -- how are we doing for L and b
 
-            foreach (int b_ in poss_b)
+            int L = 0;
+            int b = 0;
+            foreach (int b_guess in poss_b)
             {
-                int L_ = E + b_;
-                if (IsValid(L_))
-                    poss_L.Add(L_);
-            }
-            int L = poss_L[0];
-            int b = L - E;
-
-            // -- let's try f and M
-
-            for (int ind = 1; V + ind * ind < 100; ind++)
-            {
-                int f_ = V + ind * ind;
-                int M_ = V * f_;
-                if (IsValid(f_) && IsValid(M_))
+                int L_guess = E + b_guess;
+                if (IsValid(L_guess))
                 {
-                    poss_f.Add(f_);
-                    poss_M.Add(M_);
+                    L = L_guess;
+                    b = b_guess;
                 }
             }
-            int M = poss_M[0];
-            int f = poss_f[0];
+
+            // -- let's try f and M
+            int M = 0;
+            int f = 0;
+            for (int ind = 1; V + ind * ind < 100; ind++)
+            {
+                int f_guess = V + ind * ind;
+                int M_guess = V * f_guess;
+                if (IsValid(f_guess) && IsValid(M_guess))
+                {
+                    f = f_guess;
+                    M = M_guess;
+                }
+            }
 
             // -- we now know K and a
 
@@ -134,37 +110,37 @@ namespace L4673
 
             // -- try for d
 
+            int d = 0;
             for (int ind = 2; K * ind * ind < 1000; ind++)
             {
-                int d_ = K * ind * ind;
-                if (d_ >= 100 && IsValid(d_))
+                int d_guess = K * ind * ind;
+                if (d_guess >= 100 && IsValid(d_guess))
                 {
-                    poss_d.Add(d_);
+                    d = d_guess;
                 }
             }
-            int d = poss_d[0];
 
             // -- Shall we try F
 
-            foreach (var F_ in Factorize(H, 2))
+            int F = 0;
+            foreach (var F_guess in Factorize(H, 2))
             {
-                poss_F.Add(F_);
+                F = F_guess;
             }
-            int F = poss_F[0];
 
-            // -- Try for B  & O
+            // -- Try for B & O
 
-            foreach (int B_ in Factorize(T - F - F - F, 2))
+            int B = 0;
+            int O = 0;
+            foreach (int B_guess in Factorize(T - F - F - F, 2))
             {
-                int O_ = B_ + B_ + f;
-                if (IsValid(O_) && O_.ToString().Length == 2)
+                int O_guess = B_guess + B_guess + f;
+                if (IsValid(O_guess) && O_guess.ToString().Length == 2)
                 {
-                    poss_B.Add(B_);
-                    poss_O.Add(O_);
+                    B = B_guess;
+                    O = O_guess;
                 }
             }
-            int B = poss_B[0];
-            int O = poss_O[0];
 
             // -- We can just calc R & Z
 
@@ -173,27 +149,27 @@ namespace L4673
 
             // -- Let's try for e, Q, D, G and S
 
+            int e = 0;
+            int Q = 0;
+            int D = 0;
+            int G = 0;
+            int S = 0;
             for (int ind = 1; V + ind * ind < 100; ind++)
             {
-                int e_ = V + ind * ind;
-                int Q_ = B + e_ - F;
-                int D_ = M + Q_ - B;
-                int G_ = D_ + T - f;
-                int S_ = G_ * (B + F);
-                if (IsValid(e_) && IsValid(Q_) && IsValid(D_) && IsValid(G_) && IsValid(S_))
+                int e_guess = V + ind * ind;
+                int Q_guess = B + e_guess - F;
+                int D_guess = M + Q_guess - B;
+                int G_guess = D_guess + T - f;
+                int S_guess = G_guess * (B + F);
+                if (IsValid(e_guess) && IsValid(Q_guess) && IsValid(D_guess) && IsValid(G_guess) && IsValid(S_guess))
                 {
-                    poss_e.Add(e_);
-                    poss_Q.Add(Q_);
-                    poss_D.Add(D_);
-                    poss_G.Add(G_);
-                    poss_S.Add(S_);
+                    e = e_guess;
+                    Q = Q_guess;
+                    D = D_guess;
+                    G = G_guess;
+                    S = S_guess;
                 }
             }
-            int e = poss_e[0];
-            int Q = poss_Q[0];
-            int D = poss_D[0];
-            int G = poss_G[0];
-            int S = poss_S[0];
 
             int X = T * (Q - V);
             int J = d - e;
@@ -203,25 +179,26 @@ namespace L4673
 
             Console.WriteLine("-----------------------These can't actually be determined");
 
-            for (int A_ = 1000; A_ < 10000; A_++)
-            {
-                if (IsValid(A_) && A_ % F == 0 && A_ % e == 0)
-                {
-                    Console.WriteLine($"A={A_}");
-                }
-            }
             int A = 0;
-            for (int ind = 4; Q * ind * ind < 10000; ind++)
-            {
-                int N_ = Q * ind * ind;
-                int P_ = N_ + V;
-                if (N_.ToString().Length == 4 && IsValid(N_) && IsValid(P_) && P_.ToString().Length == 4)
-                {
-                    Console.WriteLine($"N={N_} P={P_}");
-                }
-            }
             int N = 0;
             int P = 0;
+
+            for (int A_guess = 1000; A_guess < 10000; A_guess++)
+            {
+                if (IsValid(A_guess) && A_guess % F == 0 && A_guess % e == 0)
+                {
+                    Console.WriteLine($"A={A_guess}");
+                }
+            }
+            for (int ind = 4; Q * ind * ind < 10000; ind++)
+            {
+                int N_guess = Q * ind * ind;
+                int P_guess = N_guess + V;
+                if (N_guess.ToString().Length == 4 && IsValid(N_guess) && IsValid(P_guess) && P_guess.ToString().Length == 4)
+                {
+                    Console.WriteLine($"N={N_guess} P={P_guess}");
+                }
+            }
 
             Console.WriteLine("-----------------------What we do have");
 
